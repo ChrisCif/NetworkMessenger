@@ -12540,12 +12540,15 @@
   },
   "project": {
     "version": "1.0.0",
+    "restoreSettings": {
+      "hideWarningsAndErrors": true
+    },
     "restore": {
-      "projectUniqueName": "D:\\School\\RIT\\ThirdYear\\Copads\\COPADS_Projects\\P3\\Project3_NetworkMessenger\\P3_Client\\P3_Client.csproj",
+      "projectUniqueName": "D:\\School\\RIT\\ThirdYear\\Copads\\COPADS_Projects\\P3\\NetworkMessenger\\Project3_NetworkMessenger\\P3_Client\\P3_Client.csproj",
       "projectName": "P3_Client",
-      "projectPath": "D:\\School\\RIT\\ThirdYear\\Copads\\COPADS_Projects\\P3\\Project3_NetworkMessenger\\P3_Client\\P3_Client.csproj",
+      "projectPath": "D:\\School\\RIT\\ThirdYear\\Copads\\COPADS_Projects\\P3\\NetworkMessenger\\Project3_NetworkMessenger\\P3_Client\\P3_Client.csproj",
       "packagesPath": "C:\\Users\\Chris\\.nuget\\packages\\",
-      "outputPath": "D:\\School\\RIT\\ThirdYear\\Copads\\COPADS_Projects\\P3\\Project3_NetworkMessenger\\P3_Client\\obj\\",
+      "outputPath": "D:\\School\\RIT\\ThirdYear\\Copads\\COPADS_Projects\\P3\\NetworkMessenger\\Project3_NetworkMessenger\\P3_Client\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -12575,14 +12578,14 @@
     "frameworks": {
       "netcoreapp2.0": {
         "dependencies": {
-          "Microsoft.AspNetCore.All": {
-            "target": "Package",
-            "version": "[2.0.5, )"
-          },
           "Microsoft.NETCore.App": {
             "target": "Package",
-            "version": "[2.0.0, )",
+            "version": "2.0",
             "autoReferenced": true
+          },
+          "Microsoft.AspNetCore.All": {
+            "target": "Package",
+            "version": "2.0.5"
           }
         },
         "imports": [

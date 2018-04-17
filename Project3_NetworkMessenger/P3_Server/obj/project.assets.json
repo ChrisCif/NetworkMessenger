@@ -12277,12 +12277,15 @@
   },
   "project": {
     "version": "1.0.0",
+    "restoreSettings": {
+      "hideWarningsAndErrors": true
+    },
     "restore": {
-      "projectUniqueName": "D:\\School\\RIT\\ThirdYear\\Copads\\COPADS_Projects\\P3\\Project3_NetworkMessenger\\P3_Server\\P3_Server.csproj",
+      "projectUniqueName": "D:\\School\\RIT\\ThirdYear\\Copads\\COPADS_Projects\\P3\\NetworkMessenger\\Project3_NetworkMessenger\\P3_Server\\P3_Server.csproj",
       "projectName": "P3_Server",
-      "projectPath": "D:\\School\\RIT\\ThirdYear\\Copads\\COPADS_Projects\\P3\\Project3_NetworkMessenger\\P3_Server\\P3_Server.csproj",
+      "projectPath": "D:\\School\\RIT\\ThirdYear\\Copads\\COPADS_Projects\\P3\\NetworkMessenger\\Project3_NetworkMessenger\\P3_Server\\P3_Server.csproj",
       "packagesPath": "C:\\Users\\Chris\\.nuget\\packages\\",
-      "outputPath": "D:\\School\\RIT\\ThirdYear\\Copads\\COPADS_Projects\\P3\\Project3_NetworkMessenger\\P3_Server\\obj\\",
+      "outputPath": "D:\\School\\RIT\\ThirdYear\\Copads\\COPADS_Projects\\P3\\NetworkMessenger\\Project3_NetworkMessenger\\P3_Server\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -12312,18 +12315,18 @@
     "frameworks": {
       "netcoreapp2.0": {
         "dependencies": {
-          "Microsoft.AspNetCore.All": {
-            "target": "Package",
-            "version": "[2.0.5, )"
-          },
           "Microsoft.NETCore.App": {
             "target": "Package",
-            "version": "[2.0.0, )",
+            "version": "2.0",
             "autoReferenced": true
+          },
+          "Microsoft.AspNetCore.All": {
+            "target": "Package",
+            "version": "2.0.5"
           },
           "Newtonsoft.Json": {
             "target": "Package",
-            "version": "[11.0.2, )"
+            "version": "11.0.2"
           }
         },
         "imports": [
