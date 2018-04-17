@@ -21,24 +21,19 @@ namespace P3_Server
     [JsonObject(MemberSerialization.OptIn)]
     public class Message
     {
-
-        [JsonProperty]
-        private string content;
-        [JsonProperty]
-        private string sender;
-        [JsonProperty]
-        private string channel;
-        [JsonProperty]
-        private DateTime timestamp;
         
-        /*
+        [JsonProperty]
         private string content;
+        [JsonProperty]
         private User sender;
-        private Channel channel;
-        private DateTime timestamp;
-        private ulong id;
-        private int partID; // If the message is too long and needs to be broken up into parts (different messages)
+        [JsonProperty]
+        //private Channel channel;
+        //private DateTime timestamp;
+        [JsonProperty]
+        //private ulong id;
+        //private int partID; // If the message is too long and needs to be broken up into parts (different messages)
 
+        /*
         public Message(string content, User sender, Channel channel, DateTime timestamp, ulong id, int partID)
         {
             this.content = content;
@@ -50,19 +45,26 @@ namespace P3_Server
         }
         */
 
+        public User getUser() { return sender; }
+
     }
 
+    [JsonObject(MemberSerialization.OptIn)]
     public class User
     {
+        [JsonProperty]
         private string username;
+        [JsonProperty]
         private ulong id;
-        private string password;
+        //private string password;
 
-        public User(string username, ulong id, string password)
+        public void setID(ulong id) { this.id = id; }
+
+        public User(string username, ulong id/*, string password*/)
         {
             this.username = username;
             this.id = id;
-            this.password = password;
+            //this.password = password;
         }
     }
 
@@ -78,18 +80,25 @@ namespace P3_Server
         }
     }
 
+    [JsonObject(MemberSerialization.OptIn)]
     public class Channel
     {
+        [JsonProperty]
         private ulong id;
+        [JsonProperty]
         private string name;
+        [JsonProperty]
         private User creator;
 
+        /*
         public Channel(ulong id, string name, User creator)
         {
             this.id = id;
             this.name = name;
             this.creator = creator;
         }
+        */
+
     }
 
     public class UserChannelList

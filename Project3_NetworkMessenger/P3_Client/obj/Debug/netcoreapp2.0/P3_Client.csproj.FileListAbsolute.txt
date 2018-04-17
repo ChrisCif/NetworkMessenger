@@ -8,3 +8,13 @@ D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\Project3_NetworkMessenger\P3_C
 D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\Project3_NetworkMessenger\P3_Client\obj\Debug\netcoreapp2.0\P3_Client.AssemblyInfo.cs
 D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\Project3_NetworkMessenger\P3_Client\obj\Debug\netcoreapp2.0\P3_Client.dll
 D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\Project3_NetworkMessenger\P3_Client\obj\Debug\netcoreapp2.0\P3_Client.pdb
+D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\NetworkMessenger\Project3_NetworkMessenger\P3_Client\bin\Debug\netcoreapp2.0\P3_Client.deps.json
+D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\NetworkMessenger\Project3_NetworkMessenger\P3_Client\bin\Debug\netcoreapp2.0\P3_Client.runtimeconfig.json
+D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\NetworkMessenger\Project3_NetworkMessenger\P3_Client\bin\Debug\netcoreapp2.0\P3_Client.runtimeconfig.dev.json
+D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\NetworkMessenger\Project3_NetworkMessenger\P3_Client\bin\Debug\netcoreapp2.0\P3_Client.dll
+D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\NetworkMessenger\Project3_NetworkMessenger\P3_Client\bin\Debug\netcoreapp2.0\P3_Client.pdb
+D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\NetworkMessenger\Project3_NetworkMessenger\P3_Client\obj\Debug\netcoreapp2.0\P3_Client.csproj.CoreCompileInputs.cache
+D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\NetworkMessenger\Project3_NetworkMessenger\P3_Client\obj\Debug\netcoreapp2.0\P3_Client.AssemblyInfoInputs.cache
+D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\NetworkMessenger\Project3_NetworkMessenger\P3_Client\obj\Debug\netcoreapp2.0\P3_Client.AssemblyInfo.cs
+D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\NetworkMessenger\Project3_NetworkMessenger\P3_Client\obj\Debug\netcoreapp2.0\P3_Client.dll
+D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\NetworkMessenger\Project3_NetworkMessenger\P3_Client\obj\Debug\netcoreapp2.0\P3_Client.pdb

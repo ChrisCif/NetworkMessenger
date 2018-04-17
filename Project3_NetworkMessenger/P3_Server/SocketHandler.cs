@@ -48,6 +48,7 @@ namespace P3_Server
             
             var sMess = System.Text.Encoding.Default.GetString(buffer);
             var message = JsonConvert.DeserializeObject<Message>(sMess);
+            //message.getUser().setID((ulong)Messages.list.Count);
             
             Messages.Add(message);
 

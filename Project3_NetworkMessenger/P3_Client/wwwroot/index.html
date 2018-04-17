@@ -14,11 +14,30 @@
         color: cyan;
 
     }
+    .userID
+    {
+
+        font-size: 3px;
+
+    }
 
     .col
     {
 
         border: white dashed 1px;
+
+    }
+
+    #login
+    {
+
+        display: block;
+
+    }
+    #chat
+    {
+
+        display: none;
 
     }
 
@@ -47,47 +66,77 @@
 </head>
 <body>
 
-    <!-- Header -->
-    <div class = "row">
+    <!-- Login View -->
+    <div id = "login">
 
-        <h3 id = "channelHead"><!-- Append header here --></h3>
+        <div class = "col-lg-6 col-lg-offset-3">
 
-    </div>
+            <div class = "row" id = "loginMessages">
+                <!-- Append login messages here -->
+            </div>
 
-    <!-- Full Display -->
-    <div class = "row">
+            <div class = "row" id = "loginForm">
+                <div class = "card text-white bg-secondary mb-3">
+                    <div class = "card-body">
 
-        <!-- Channel List -->
-        <div class = "col-lg-3">
+                        <h4>Login</h4>
+                        <input id = "nameInput" type = "text">
+                        <button id = "nameButton">Login</button>
 
-            <p><a href = "#" id = "pubLink">Pub</a></p>
-            <p><a href = "#" id = "otherLink">Other</a></p>
+                    </div>
+                </div>
+            </div>
 
         </div>
 
-        <!-- Display -->
-        <div class = "col-lg-6">
+    </div>
 
-            <!-- Output-->
-            <div class = "row" id = "output">
+    <!-- Chat View -->
+    <div id = "chat">
 
-                <!-- Pub Channel -->
-                <div id = "pubOutput">
-                    <!-- Append messages here -->
-                </div>
+        <!-- Header -->
+        <div class = "row">
 
-                <!-- Other Channel -->
-                <div id = "otherOutput">
-                    <!-- Append messages here -->
-                </div>
+            <h3 id = "channelHead"><!-- Append header here --></h3>
+
+        </div>
+
+        <!-- Full Display -->
+        <div class = "row">
+
+            <!-- Channel List -->
+            <div class = "col-lg-3">
+
+                <p><a href = "#" id = "pubLink">Pub</a></p>
+                <p><a href = "#" id = "otherLink">Other</a></p>
 
             </div>
 
-            <!-- Input -->
-            <div class = "row" id = "input">
+            <!-- Display -->
+            <div class = "col-lg-6">
 
-                <input id = "inputText" type = "text">
-                <button id = "sendButton">Send</button>
+                <!-- Output-->
+                <div class = "row" id = "output">
+
+                    <!-- Pub Channel -->
+                    <div id = "pubOutput">
+                        <!-- Append messages here -->
+                    </div>
+
+                    <!-- Other Channel -->
+                    <div id = "otherOutput">
+                        <!-- Append messages here -->
+                    </div>
+
+                </div>
+
+                <!-- Input -->
+                <div class = "row" id = "input">
+
+                    <input id = "inputText" type = "text">
+                    <button id = "sendButton">Send</button>
+
+                </div>
 
             </div>
 
@@ -104,6 +153,7 @@
     var output;
     var text = "test echo";
 
+    var username = "";
     var currentChannel = "pub";
 
     function s_write(s){
@@ -114,7 +164,7 @@
         //var channel = message.channel + "Output";
 
         //$("#output").empty();
-        $("#" + message.channel + "Output").append("<p><span class='sentName'>" + message.sender + ": </span>" + message.content + "</p>");
+        $("#" + message.channel + "Output").append("<p><span class='sentName'>" + message.sender.username + "<span id = 'userID'> #" + message.sender.id + "</span>: </span>" + message.content + "</p>");
 
     }
     function r_write(s){
@@ -138,7 +188,10 @@
         //s_write(text);
         var message = {
             content: text,
-            sender: "Bigman",
+            sender: {
+                username: username,
+                id: 0
+            },
             channel: channel
         };
         socket.send(JSON.stringify(message));
@@ -168,12 +221,45 @@
 
     }
 
+    function login(){
+
+        $("#login").css("display", "none");
+        $("#chat").css("display", "block");
+
+    }
+
     $(document).ready(function(){
 
         connect();
 
         updateChannelDisplay();
 
+        //Login
+        $("#nameButton").click(function(){
+
+            var name = $("#nameInput").val();
+
+            if(name != ""){
+
+                username = name;
+                login();
+
+            }
+            else{
+
+                $("#loginMessages").html(""+
+                        "<div class = 'alert alert-dismissible alert danger'>" +
+                        "   <button type=\'button\' class=\'close\' data-dismiss=\'alert\'>&times;</button>"+
+                        "   <p>No ghosts allowed (ghouls are okay though)</p>"+
+                        "</div>"
+                );
+            }
+
+            $("#nameInput").val("");
+
+        });
+
+        // Send Messages
         $("#sendButton").click(function(){
 
             var message = $("#inputText").val();
@@ -182,6 +268,7 @@
 
         });
 
+        // Switch Channels
         $("#pubLink").click(function(){
 
             currentChannel = "pub";
