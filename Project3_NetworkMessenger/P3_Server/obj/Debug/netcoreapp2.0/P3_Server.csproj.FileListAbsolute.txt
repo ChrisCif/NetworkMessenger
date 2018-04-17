@@ -1,0 +1,11 @@
+D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\Project3_NetworkMessenger\P3_Server\bin\Debug\netcoreapp2.0\P3_Server.deps.json
+D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\Project3_NetworkMessenger\P3_Server\bin\Debug\netcoreapp2.0\P3_Server.runtimeconfig.json
+D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\Project3_NetworkMessenger\P3_Server\bin\Debug\netcoreapp2.0\P3_Server.runtimeconfig.dev.json
+D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\Project3_NetworkMessenger\P3_Server\bin\Debug\netcoreapp2.0\P3_Server.dll
+D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\Project3_NetworkMessenger\P3_Server\bin\Debug\netcoreapp2.0\P3_Server.pdb
+D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\Project3_NetworkMessenger\P3_Server\obj\Debug\netcoreapp2.0\P3_Server.csproj.CoreCompileInputs.cache
+D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\Project3_NetworkMessenger\P3_Server\obj\Debug\netcoreapp2.0\P3_Server.AssemblyInfoInputs.cache
+D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\Project3_NetworkMessenger\P3_Server\obj\Debug\netcoreapp2.0\P3_Server.AssemblyInfo.cs
+D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\Project3_NetworkMessenger\P3_Server\obj\Debug\netcoreapp2.0\P3_Server.dll
+D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\Project3_NetworkMessenger\P3_Server\obj\Debug\netcoreapp2.0\P3_Server.pdb
+D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\Project3_NetworkMessenger\P3_Server\obj\Debug\netcoreapp2.0\P3_Server.csprojResolveAssemblyReference.cache

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+
+    .sentName
+    {
+
+        color: orange;
+
+    }
+    .receivedName
+    {
+
+        color: cyan;
+
+    }
+
+    .col
+    {
+
+        border: white dashed 1px;
+
+    }
+
+    #pubOutput
+    {
+
+        display: block;
+
+    }
+    #otherOutput
+    {
+
+        display: none;
+
+    }
+
+</style>
+<head>
+
+    <meta charset="UTF-8">
+    <title>COPADS Messenger</title>
+
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+</head>
+<body>
+
+    <!-- Header -->
+    <div class = "row">
+
+        <h3 id = "channelHead"><!-- Append header here --></h3>
+
+    </div>
+
+    <!-- Full Display -->
+    <div class = "row">
+
+        <!-- Channel List -->
+        <div class = "col-lg-3">
+
+            <p><a href = "#" id = "pubLink">Pub</a></p>
+            <p><a href = "#" id = "otherLink">Other</a></p>
+
+        </div>
+
+        <!-- Display -->
+        <div class = "col-lg-6">
+
+            <!-- Output-->
+            <div class = "row" id = "output">
+
+                <!-- Pub Channel -->
+                <div id = "pubOutput">
+                    <!-- Append messages here -->
+                </div>
+
+                <!-- Other Channel -->
+                <div id = "otherOutput">
+                    <!-- Append messages here -->
+                </div>
+
+            </div>
+
+            <!-- Input -->
+            <div class = "row" id = "input">
+
+                <input id = "inputText" type = "text">
+                <button id = "sendButton">Send</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+<script type="text/javascript">
+
+    var socket;
+    var uri = "ws://127.0.0.1:57856/ws";
+    var output;
+    var text = "test echo";
+
+    var currentChannel = "pub";
+
+    function s_write(s){
+
+        console.log("Received: " + s);
+        var message = JSON.parse(s);
+
+        //var channel = message.channel + "Output";
+
+        //$("#output").empty();
+        $("#" + message.channel + "Output").append("<p><span class='sentName'>" + message.sender + ": </span>" + message.content + "</p>");
+
+    }
+    function r_write(s){
+
+        $("#pubOutput").append("<p><span class='receivedName'>Server: </span>" + s + "</p>");
+
+    }
+
+    function connect(){
+
+        socket = new WebSocket(uri);
+        socket.onopen = function(e) { r_write("opened " + uri); };
+        socket.onclose = function(e) { r_write("closed"); };
+        socket.onmessage = function(e) { s_write(e.data); };
+        socket.onerror = function(e) { r_write("Error: " + e.data); };
+
+    }
+
+    function send(text, channel){
+
+        //s_write(text);
+        var message = {
+            content: text,
+            sender: "Bigman",
+            channel: channel
+        };
+        socket.send(JSON.stringify(message));
+
+        console.log("Attempting to send: " + JSON.stringify(message));
+
+    }
+
+    function updateChannelDisplay(){
+
+        if(currentChannel == "pub"){
+
+            $("#pubOutput").css("display", "block");
+            $("#otherOutput").css("display", "none");
+
+            $("#channelHead").html("Pub");
+
+        }
+        else if(currentChannel == "other"){
+
+            $("#pubOutput").css("display", "none");
+            $("#otherOutput").css("display", "block");
+
+            $("#channelHead").html("Other");
+
+        }
+
+    }
+
+    $(document).ready(function(){
+
+        connect();
+
+        updateChannelDisplay();
+
+        $("#sendButton").click(function(){
+
+            var message = $("#inputText").val();
+            $("#inputText").val("");
+            send(message, currentChannel);
+
+        });
+
+        $("#pubLink").click(function(){
+
+            currentChannel = "pub";
+            updateChannelDisplay();
+
+        });
+        $("#otherLink").click(function(){
+
+            currentChannel = "other";
+            updateChannelDisplay();
+
+        });
+
+    });
+
+</script>
+
+</html>
