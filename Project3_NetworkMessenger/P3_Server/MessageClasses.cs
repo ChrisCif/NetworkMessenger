@@ -27,9 +27,10 @@ namespace P3_Server
         [JsonProperty]
         private User sender;
         [JsonProperty]
+        private string channel;
         //private Channel channel;
         //private DateTime timestamp;
-        [JsonProperty]
+        //[JsonProperty]
         //private ulong id;
         //private int partID; // If the message is too long and needs to be broken up into parts (different messages)
 

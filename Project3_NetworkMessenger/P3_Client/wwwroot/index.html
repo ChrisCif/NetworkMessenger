@@ -17,7 +17,15 @@
     .userID
     {
 
-        font-size: 3px;
+        font-size: 10px;
+        color: yellow;
+
+    }
+    .mention
+    {
+
+        background-color: #2a2a2a;
+        color: whitesmoke;
 
     }
 
@@ -119,12 +127,12 @@
                 <div class = "row" id = "output">
 
                     <!-- Pub Channel -->
-                    <div id = "pubOutput">
+                    <div id = "cpubOutput">
                         <!-- Append messages here -->
                     </div>
 
                     <!-- Other Channel -->
-                    <div id = "otherOutput">
+                    <div id = "cotherOutput">
                         <!-- Append messages here -->
                     </div>
 
@@ -156,6 +164,9 @@
     var username = "";
     var currentChannel = "pub";
 
+    var messages = [];
+
+    /*
     function s_write(s){
 
         console.log("Received: " + s);
@@ -167,6 +178,7 @@
         $("#" + message.channel + "Output").append("<p><span class='sentName'>" + message.sender.username + "<span id = 'userID'> #" + message.sender.id + "</span>: </span>" + message.content + "</p>");
 
     }
+    */
     function r_write(s){
 
         $("#pubOutput").append("<p><span class='receivedName'>Server: </span>" + s + "</p>");
@@ -178,8 +190,91 @@
         socket = new WebSocket(uri);
         socket.onopen = function(e) { r_write("opened " + uri); };
         socket.onclose = function(e) { r_write("closed"); };
-        socket.onmessage = function(e) { s_write(e.data); };
+        socket.onmessage = function(e) { receive_message(e.data); };
         socket.onerror = function(e) { r_write("Error: " + e.data); };
+
+    }
+
+    function receive_message(serM){
+
+        //console.log("Received: " + serM);
+
+        var m = JSON.parse(serM);
+
+        messages.push(m);
+        write_message(m);
+
+    }
+
+    function write_message(m){
+
+        m.content = check_mentions(m.content);  // Check for mentions
+
+        $("#c" + m.channel + "Output").append(""+
+            "<p><span class='sentName'>" + m.sender.username + "<span class = 'userID'> #" + m.sender.id + "</span>: </span>" + m.content + "</p>"
+        );
+
+    }
+
+    function check_mentions(content){
+
+        /*
+        var index = text.indexOf("@");
+        if(index == -1)
+            return text;
+
+        console.log("Symbol found at index: " + index);
+
+        var begin = text.substring(0, index);
+        begin += "<span class = 'mention'>";
+
+        console.log("Begin includes: " + begin);
+
+        var end_index = text.substring(index, text.length).indexOf(" ");  // Delimit by space
+        if(end_index == -1)
+            end_index = text.length;
+        else
+            end_index += index;
+
+        console.log("Includes everything up to index: " + end_index);
+
+        var inner = text.substring(index, end_index);
+
+        console.log("The mention is: " + inner);
+
+        var end = "</span>" + text.substring(end_index);
+
+        return (begin + inner + end);
+        */
+
+        var text = content;
+
+        var begin_index = 0;
+        var next_index = text.indexOf("@");
+        while(next_index >= begin_index){
+
+            begin_index = next_index;
+            next_index = text.substring(begin_index + 1).indexOf("@") + begin_index;
+            var end = next_index;
+            if(next_index < begin_index){
+                end = text.length;
+            }
+
+            var name_index = text.substring(begin_index, end).indexOf(username);
+            if(name_index == 1){
+
+                var m_final = begin_index + username.length + 1;
+                var before_text = text.substring(0, begin_index);
+                var within_text = text.substring(begin_index, m_final);
+                var after_text = text.substring(m_final);
+
+                text = before_text + "<span class = 'mention'>" + within_text + "</span>" + after_text;
+
+            }
+
+        }
+
+        return text;
 
     }
 
@@ -196,7 +291,7 @@
         };
         socket.send(JSON.stringify(message));
 
-        console.log("Attempting to send: " + JSON.stringify(message));
+        //console.log("Attempting to send: " + JSON.stringify(message));
 
     }
 
@@ -204,16 +299,16 @@
 
         if(currentChannel == "pub"){
 
-            $("#pubOutput").css("display", "block");
-            $("#otherOutput").css("display", "none");
+            $("#cpubOutput").css("display", "block");
+            $("#cotherOutput").css("display", "none");
 
             $("#channelHead").html("Pub");
 
         }
         else if(currentChannel == "other"){
 
-            $("#pubOutput").css("display", "none");
-            $("#otherOutput").css("display", "block");
+            $("#cpubOutput").css("display", "none");
+            $("#cotherOutput").css("display", "block");
 
             $("#channelHead").html("Other");
 
@@ -263,8 +358,12 @@
         $("#sendButton").click(function(){
 
             var message = $("#inputText").val();
-            $("#inputText").val("");
-            send(message, currentChannel);
+            if(message != ""){
+
+                $("#inputText").val("");
+                send(message, currentChannel);
+
+            }
 
         });
 
