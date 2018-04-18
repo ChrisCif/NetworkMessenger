@@ -115,8 +115,17 @@
             <!-- Channel List -->
             <div class = "col-lg-3">
 
-                <p><a href = "#" id = "pubLink">Pub</a></p>
-                <p><a href = "#" id = "otherLink">Other</a></p>
+                <div class = "row">
+
+                    <input id = "newChannelInput" type = "text">
+                    <button id = "newChanelSubmit">Create</button>
+
+                </div>
+
+                <div class = "row" id = "chanList">
+                    <p><a href = "#" id = "pubLink">Pub</a></p>
+                    <p><a href = "#" id = "otherLink">Other</a></p>
+                </div>
 
             </div>
 
@@ -161,7 +170,12 @@
     var output;
     var text = "test echo";
 
-    var username = "";
+    // Init
+    var me = {
+        username: "",
+        id: 0
+    };
+
     var currentChannel = "pub";
 
     var messages = [];
@@ -190,8 +204,21 @@
         socket = new WebSocket(uri);
         socket.onopen = function(e) { r_write("opened " + uri); };
         socket.onclose = function(e) { r_write("closed"); };
-        socket.onmessage = function(e) { receive_message(e.data); };
+        socket.onmessage = function(e) { interpret(e.data); };
         socket.onerror = function(e) { r_write("Error: " + e.data); };
+
+    }
+
+    function interpret(sObj){
+
+        if(sObj.charAt(0) == 'M'){
+            // Received a message
+            receive_message(sObj.substring(2));
+        }
+        else if(sObj.charAt(0) == 'C'){
+            // Received a new channel
+            createChannel(sObj.substring(2));
+        }
 
     }
 
@@ -217,35 +244,6 @@
     }
 
     function check_mentions(content){
-
-        /*
-        var index = text.indexOf("@");
-        if(index == -1)
-            return text;
-
-        console.log("Symbol found at index: " + index);
-
-        var begin = text.substring(0, index);
-        begin += "<span class = 'mention'>";
-
-        console.log("Begin includes: " + begin);
-
-        var end_index = text.substring(index, text.length).indexOf(" ");  // Delimit by space
-        if(end_index == -1)
-            end_index = text.length;
-        else
-            end_index += index;
-
-        console.log("Includes everything up to index: " + end_index);
-
-        var inner = text.substring(index, end_index);
-
-        console.log("The mention is: " + inner);
-
-        var end = "</span>" + text.substring(end_index);
-
-        return (begin + inner + end);
-        */
 
         var text = content;
 
@@ -278,24 +276,25 @@
 
     }
 
-    function send(text, channel){
+    function send_message(text, channel){
+
+        var prefix = "M:";
 
         //s_write(text);
         var message = {
             content: text,
-            sender: {
-                username: username,
-                id: 0
-            },
+            sender: me,
             channel: channel
         };
-        socket.send(JSON.stringify(message));
+        socket.send(prefix + JSON.stringify(message));
 
         //console.log("Attempting to send: " + JSON.stringify(message));
 
     }
 
     function updateChannelDisplay(){
+
+        // TODO: Generic way of updating display
 
         if(currentChannel == "pub"){
 
@@ -313,6 +312,31 @@
             $("#channelHead").html("Other");
 
         }
+
+    }
+
+    function submit_channel(chanName){
+
+        var prefix = "C:";
+
+        var channel = {
+            id: 0,  // Init
+            name: chanName,
+            creator: me
+        };
+
+        socket.send(prefix + JSON.stringify(channel));
+
+    }
+    function createChannel(chanConfirmation){
+
+        var channel = JSON.parse(chanConfirmation);
+
+        // TODO: Assign channel ID to link
+
+        $("#chanList").append("<p><a href = '#' id = '" + channel.name +"Link'>Pub</a></p>");
+
+        $("#output").append("<div id = 'c" + channel.name + "Output'></div>");
 
     }
 
@@ -336,7 +360,8 @@
 
             if(name != ""){
 
-                username = name;
+                //username = name;
+                me.username = name;
                 login();
 
             }
@@ -361,7 +386,7 @@
             if(message != ""){
 
                 $("#inputText").val("");
-                send(message, currentChannel);
+                send_message(message, currentChannel);
 
             }
 
@@ -378,6 +403,18 @@
 
             currentChannel = "other";
             updateChannelDisplay();
+
+        });
+
+        // Create a new channel
+        $("#newChannelSubmit").click(function(){
+
+            var cName = $("newChannelInput").val();
+            if(cName != ""){
+
+                submit_channel(cName);
+
+            }
 
         });
 

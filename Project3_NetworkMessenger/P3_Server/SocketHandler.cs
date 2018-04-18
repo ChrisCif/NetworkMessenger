@@ -33,7 +33,17 @@ namespace P3_Server
                 var inbuffer = new byte[BufferSize];
 
                 await this.socket.ReceiveAsync(inbuffer, CancellationToken.None);
-                await ParseMessage(inbuffer);
+
+                var sObj = System.Text.Encoding.Default.GetString(buffer);
+                if(sObj[0] == 'M')
+                {
+                    await ParseMessage(sObj);
+                }
+                else if(sObj[0] == 'C')
+                {
+                    await CreateChannel(sObj);
+                }
+                
 
                 Thread.Sleep(1000);
 
@@ -43,17 +53,34 @@ namespace P3_Server
 
         }
 
-        async Task ParseMessage(byte[] buffer)
+        async Task ParseMessage(string sMess)
         {
             
-            var sMess = System.Text.Encoding.Default.GetString(buffer);
-            var message = JsonConvert.DeserializeObject<Message>(sMess);
-            //message.getUser().setID((ulong)Messages.list.Count);
-            
+            // Get and add message
+            var message = JsonConvert.DeserializeObject<Message>(sMess.Substring(2));
             Messages.Add(message);
 
-            var outbuffer = System.Text.Encoding.Default.GetBytes(JsonConvert.SerializeObject(message));
+            // Echo message
+            var outbuffer = System.Text.Encoding.Default.GetBytes("M:" + JsonConvert.SerializeObject(message));
             var outgoing = new ArraySegment<byte>(outbuffer, 0, outbuffer.Length);
+            
+            // TODO: Send to all
+            await this.socket.SendAsync(outgoing, WebSocketMessageType.Text, true, CancellationToken.None);
+
+        }
+
+        async Task CreateChannel(string sChan)
+        {
+
+            var channel = JsonConvert.DeserializeObject<Channel>(sChan.Substring(2));
+
+            // TODO: Do something with this channel? Like add it to a list or something...?
+
+            // Echo channel
+            var outbuffer = System.Text.Encoding.Default.GetBytes("C:" + JsonConvert.SerializeObject(channel));
+            var outgoing = new ArraySegment<byte>(outbuffer, 0, outbuffer.Length);
+
+            // TODO: Send to all
             await this.socket.SendAsync(outgoing, WebSocketMessageType.Text, true, CancellationToken.None);
 
         }
