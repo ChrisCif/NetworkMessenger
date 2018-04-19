@@ -34,7 +34,7 @@ namespace P3_Server
 
                 await this.socket.ReceiveAsync(inbuffer, CancellationToken.None);
 
-                var sObj = System.Text.Encoding.Default.GetString(buffer);
+                var sObj = System.Text.Encoding.Default.GetString(inbuffer);
                 if(sObj[0] == 'M')
                 {
                     await ParseMessage(sObj);
@@ -58,6 +58,7 @@ namespace P3_Server
             
             // Get and add message
             var message = JsonConvert.DeserializeObject<Message>(sMess.Substring(2));
+            message.setID((ulong)Messages.list.Count);
             Messages.Add(message);
 
             // Echo message
@@ -72,9 +73,10 @@ namespace P3_Server
         async Task CreateChannel(string sChan)
         {
 
+            // Get and add channel
             var channel = JsonConvert.DeserializeObject<Channel>(sChan.Substring(2));
-
-            // TODO: Do something with this channel? Like add it to a list or something...?
+            channel.setID((ulong)Channels.list.Count);
+            Channels.Add(channel);
 
             // Echo channel
             var outbuffer = System.Text.Encoding.Default.GetBytes("C:" + JsonConvert.SerializeObject(channel));

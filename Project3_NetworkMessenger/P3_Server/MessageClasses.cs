@@ -5,19 +5,7 @@ using Newtonsoft.Json;
 
 namespace P3_Server
 {
-
-    public static class Messages
-    {
-
-        public static List<Message> list = new List<Message>();
-
-        public static void Add(Message mes)
-        {
-            list.Add(mes);
-        }
-
-    }
-
+    
     [JsonObject(MemberSerialization.OptIn)]
     public class Message
     {
@@ -30,8 +18,8 @@ namespace P3_Server
         private string channel;
         //private Channel channel;
         //private DateTime timestamp;
-        //[JsonProperty]
-        //private ulong id;
+        [JsonProperty]
+        private ulong id;
         //private int partID; // If the message is too long and needs to be broken up into parts (different messages)
 
         /*
@@ -47,6 +35,23 @@ namespace P3_Server
         */
 
         public User getUser() { return sender; }
+
+        public void setID(ulong id)
+        {
+            this.id = id;
+        }
+
+    }
+
+    public static class Messages
+    {
+
+        public static List<Message> list = new List<Message>();
+
+        public static void Add(Message mes)
+        {
+            list.Add(mes);
+        }
 
     }
 
@@ -99,6 +104,23 @@ namespace P3_Server
             this.creator = creator;
         }
         */
+
+        public void setID(ulong id)
+        {
+            this.id = id;
+        }
+
+    }
+
+    public static class Channels
+    {
+
+        public static List<Channel> list = new List<Channel>();
+
+        public static void Add(Channel chan)
+        {
+            list.Add(chan);
+        }
 
     }
 

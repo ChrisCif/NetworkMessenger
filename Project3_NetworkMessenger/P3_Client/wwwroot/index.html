@@ -118,13 +118,17 @@
                 <div class = "row">
 
                     <input id = "newChannelInput" type = "text">
-                    <button id = "newChanelSubmit">Create</button>
+                    <button id = "newChannelSubmit">Create</button>
 
                 </div>
 
-                <div class = "row" id = "chanList">
-                    <p><a href = "#" id = "pubLink">Pub</a></p>
-                    <p><a href = "#" id = "otherLink">Other</a></p>
+                <div class = "row">
+                    <ul id = "chanList">
+                        <!--
+                        <li value = 0><a href = "#" class = "channelLink">Pub</a></li>
+                        <li value = 1><a href = "#" class = "channelLink">Other</a></li>
+                        -->
+                    </ul>
                 </div>
 
             </div>
@@ -135,15 +139,17 @@
                 <!-- Output-->
                 <div class = "row" id = "output">
 
-                    <!-- Pub Channel -->
-                    <div id = "cpubOutput">
-                        <!-- Append messages here -->
+                    <!--
+                    <!-- Pub Channel
+                    <div id = "c0Output">
+                        <!-- Append messages here
                     </div>
 
-                    <!-- Other Channel -->
-                    <div id = "cotherOutput">
-                        <!-- Append messages here -->
+                    <!-- Other Channel
+                    <div id = "c1Output">
+                        <!-- Append messages here
                     </div>
+                    -->
 
                 </div>
 
@@ -176,23 +182,10 @@
         id: 0
     };
 
-    var currentChannel = "pub";
+    var currentChannel = 0;
 
     var messages = [];
 
-    /*
-    function s_write(s){
-
-        console.log("Received: " + s);
-        var message = JSON.parse(s);
-
-        //var channel = message.channel + "Output";
-
-        //$("#output").empty();
-        $("#" + message.channel + "Output").append("<p><span class='sentName'>" + message.sender.username + "<span id = 'userID'> #" + message.sender.id + "</span>: </span>" + message.content + "</p>");
-
-    }
-    */
     function r_write(s){
 
         $("#pubOutput").append("<p><span class='receivedName'>Server: </span>" + s + "</p>");
@@ -222,9 +215,22 @@
 
     }
 
-    function receive_message(serM){
+    function send_message(text, channel){
 
-        //console.log("Received: " + serM);
+        var prefix = "M:";
+
+        //s_write(text);
+        var message = {
+            content: text,
+            sender: me,
+            channel: channel,
+            id: 0   // init
+        };
+        socket.send(prefix + JSON.stringify(message));
+
+    }
+
+    function receive_message(serM){
 
         var m = JSON.parse(serM);
 
@@ -276,42 +282,22 @@
 
     }
 
-    function send_message(text, channel){
-
-        var prefix = "M:";
-
-        //s_write(text);
-        var message = {
-            content: text,
-            sender: me,
-            channel: channel
-        };
-        socket.send(prefix + JSON.stringify(message));
-
-        //console.log("Attempting to send: " + JSON.stringify(message));
-
-    }
-
     function updateChannelDisplay(){
 
-        // TODO: Generic way of updating display
+        var len = $("#output").children().length;
 
-        if(currentChannel == "pub"){
+        for (var x = 0; x < len; x++){
 
-            $("#cpubOutput").css("display", "block");
-            $("#cotherOutput").css("display", "none");
-
-            $("#channelHead").html("Pub");
-
-        }
-        else if(currentChannel == "other"){
-
-            $("#cpubOutput").css("display", "none");
-            $("#cotherOutput").css("display", "block");
-
-            $("#channelHead").html("Other");
+            if(x == currentChannel){
+                $("#c" + x + "Output").css("display", "block");
+            }
+            else{
+                $("#c" + x + "Output").css("display", "none");
+            }
 
         }
+
+        $("#channelHead").html("Channel: " + currentChannel);   // TODO
 
     }
 
@@ -325,18 +311,17 @@
             creator: me
         };
 
-        socket.send(prefix + JSON.stringify(channel));
+        var sObj = prefix + JSON.stringify(channel);
+
+        socket.send(sObj);
 
     }
     function createChannel(chanConfirmation){
 
         var channel = JSON.parse(chanConfirmation);
 
-        // TODO: Assign channel ID to link
-
-        $("#chanList").append("<p><a href = '#' id = '" + channel.name +"Link'>Pub</a></p>");
-
-        $("#output").append("<div id = 'c" + channel.name + "Output'></div>");
+        $("#chanList").append("<li value = '" + channel.id + "'><a href = '#' class = 'channelLink'>" + channel.name + "</a></li>");
+        $("#output").append("<div id = 'c" + channel.id + "Output'></div>");
 
     }
 
@@ -386,22 +371,17 @@
             if(message != ""){
 
                 $("#inputText").val("");
-                send_message(message, currentChannel);
+                send_message(message, currentChannel);  // TODO: Sends a channel
 
             }
 
         });
 
         // Switch Channels
-        $("#pubLink").click(function(){
+        // Listener for dynamically added links
+        $("body").on("click", ".channelLink", function(){
 
-            currentChannel = "pub";
-            updateChannelDisplay();
-
-        });
-        $("#otherLink").click(function(){
-
-            currentChannel = "other";
+            currentChannel = $(this).parent().attr("value");
             updateChannelDisplay();
 
         });
@@ -409,7 +389,8 @@
         // Create a new channel
         $("#newChannelSubmit").click(function(){
 
-            var cName = $("newChannelInput").val();
+            var cName = $("#newChannelInput").val();
+            $("#newChannelInput").val("");
             if(cName != ""){
 
                 submit_channel(cName);
