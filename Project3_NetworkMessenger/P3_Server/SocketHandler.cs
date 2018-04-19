@@ -18,13 +18,12 @@ namespace P3_Server
         //WebSocket socket;
         public List<WebSocket> sockets;
         public List<Channel> channels;
-
-        /*
-        SocketHandler(WebSocket socket)
+        
+        SocketHandler()
         {
-            this.socket = socket;
+            this.sockets = new List<WebSocket>();
+            this.channels = new List<Channel>();
         }
-        */
 
         async Task ReceiveMessages()
         {

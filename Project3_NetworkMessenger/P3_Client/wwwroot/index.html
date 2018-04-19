@@ -230,25 +230,32 @@
             id: 0,   // init
             partID: 1   // TODO
         };
+
+        console.log("Sending message: " + JSON.stringify(message));
+
         socket.send(prefix + JSON.stringify(message));
 
     }
 
     function receive_message(serM){
 
+        console.log("Received message: " + serM);
+
         var m = JSON.parse(serM);
 
         channels[m.channel.id].messages.push(m);
 
-        //write_message(m);
+        update();
 
     }
 
     function write_message(m, c){
 
+        console.log("Writing message: " + m);
+
         m.content = check_mentions(m.content);  // Check for mentions
 
-        $("#c" + c + "Output").append(""+
+        $("#c" + c.id + "Output").append(""+
             "<p><span class='sentName'>" + m.sender.username + "<span class = 'userID'> #" + m.sender.id + "</span>: </span>" + m.content + "</p>"
         );
 
@@ -299,15 +306,22 @@
         };
 
         var sObj = prefix + JSON.stringify(channel);
+
+        console.log("Submitting channel: " + sObj);
+
         socket.send(sObj);
 
     }
     function createChannel(chanConfirmation){
 
+        console.log("Creating channel: " + chanConfirmation);
+
         var channel = JSON.parse(chanConfirmation);
         channels.push(channel);
 
         $("#output").append("<div id = 'c" + channel.id + "Output'></div>");
+
+        update();
 
     }
 
@@ -356,12 +370,14 @@
     }
     function echoMessages(){
 
+        console.log("Echoing messages");
+
         for(var c = 0; c < channels.length; c++){
 
             var channel = channels[c];
             $("#c" + channel.id + "Output").html("");
 
-            for (var m = 0; m < channel.messages; m++){
+            for (var m = 0; m < channel.messages.length; m++){
 
                 write_message(channel.messages[m], channel);
 
