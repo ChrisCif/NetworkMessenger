@@ -43,6 +43,10 @@ namespace P3_Server
                 {
                     await CreateChannel(sObj);
                 }
+                else if(sObj[0] == 'U')
+                {
+                    await AddUser(sObj);
+                }
                 
 
                 Thread.Sleep(1000);
@@ -83,6 +87,23 @@ namespace P3_Server
             var outgoing = new ArraySegment<byte>(outbuffer, 0, outbuffer.Length);
 
             // TODO: Send to all
+            await this.socket.SendAsync(outgoing, WebSocketMessageType.Text, true, CancellationToken.None);
+
+        }
+
+        async Task AddUser(string sUser)
+        {
+
+            // Get user
+            var user = JsonConvert.DeserializeObject<User>(sUser.Substring(2));
+
+            // TODO: Assign a user ID
+
+            // Echo user
+            var outbuffer = System.Text.Encoding.Default.GetBytes("U:" + JsonConvert.SerializeObject(user));
+            var outgoing = new ArraySegment<byte>(outbuffer, 0, outbuffer.Length);
+
+            // TODO: Send to correct web socket
             await this.socket.SendAsync(outgoing, WebSocketMessageType.Text, true, CancellationToken.None);
 
         }

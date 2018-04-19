@@ -249,6 +249,43 @@
 
     }
 
+    function submit_channel(chanName){
+
+        var prefix = "C:";
+
+        var channel = {
+            id: 0,  // Init
+            name: chanName,
+            creator: me
+        };
+
+        var sObj = prefix + JSON.stringify(channel);
+
+        socket.send(sObj);
+
+    }
+    function createChannel(chanConfirmation){
+
+        var channel = JSON.parse(chanConfirmation);
+
+        $("#chanList").append("<li value = '" + channel.id + "'><a href = '#' class = 'channelLink'>" + channel.name + "</a></li>");
+        $("#output").append("<div id = 'c" + channel.id + "Output'></div>");
+
+    }
+
+    function register_user(user){
+
+
+
+    }
+
+    function login(){
+
+        $("#login").css("display", "none");
+        $("#chat").css("display", "block");
+
+    }
+
     function check_mentions(content){
 
         var text = content;
@@ -282,53 +319,22 @@
 
     }
 
-    function updateChannelDisplay(){
+    function updateChannelDisplay() {
 
         var len = $("#output").children().length;
 
-        for (var x = 0; x < len; x++){
+        for (var x = 0; x < len; x++) {
 
-            if(x == currentChannel){
+            if (x == currentChannel) {
                 $("#c" + x + "Output").css("display", "block");
             }
-            else{
+            else {
                 $("#c" + x + "Output").css("display", "none");
             }
 
         }
 
         $("#channelHead").html("Channel: " + currentChannel);   // TODO
-
-    }
-
-    function submit_channel(chanName){
-
-        var prefix = "C:";
-
-        var channel = {
-            id: 0,  // Init
-            name: chanName,
-            creator: me
-        };
-
-        var sObj = prefix + JSON.stringify(channel);
-
-        socket.send(sObj);
-
-    }
-    function createChannel(chanConfirmation){
-
-        var channel = JSON.parse(chanConfirmation);
-
-        $("#chanList").append("<li value = '" + channel.id + "'><a href = '#' class = 'channelLink'>" + channel.name + "</a></li>");
-        $("#output").append("<div id = 'c" + channel.id + "Output'></div>");
-
-    }
-
-    function login(){
-
-        $("#login").css("display", "none");
-        $("#chat").css("display", "block");
 
     }
 
@@ -347,7 +353,14 @@
 
                 //username = name;
                 me.username = name;
-                login();
+
+                var user = {    // init
+                    username: name,
+                    id = 0
+                };
+                register_user(user);
+
+                //login();
 
             }
             else{
