@@ -183,8 +183,7 @@
     };
 
     var currentChannel = 0;
-
-    var messages = [];
+    var channels = [];
 
     function r_write(s){
 
@@ -212,6 +211,10 @@
             // Received a new channel
             createChannel(sObj.substring(2));
         }
+        else if(sObj.charAt(0) == 'U'){
+            // Received user confirmation
+            login(sObj.substring(2));
+        }
 
     }
 
@@ -224,7 +227,8 @@
             content: text,
             sender: me,
             channel: channel,
-            id: 0   // init
+            id: 0,   // init
+            partID: 1   // TODO
         };
         socket.send(prefix + JSON.stringify(message));
 
@@ -234,58 +238,21 @@
 
         var m = JSON.parse(serM);
 
-        messages.push(m);
-        write_message(m);
+        channels[m.channel.id].messages.push(m);
+
+        //write_message(m);
 
     }
 
-    function write_message(m){
+    function write_message(m, c){
 
         m.content = check_mentions(m.content);  // Check for mentions
 
-        $("#c" + m.channel + "Output").append(""+
+        $("#c" + c + "Output").append(""+
             "<p><span class='sentName'>" + m.sender.username + "<span class = 'userID'> #" + m.sender.id + "</span>: </span>" + m.content + "</p>"
         );
 
     }
-
-    function submit_channel(chanName){
-
-        var prefix = "C:";
-
-        var channel = {
-            id: 0,  // Init
-            name: chanName,
-            creator: me
-        };
-
-        var sObj = prefix + JSON.stringify(channel);
-
-        socket.send(sObj);
-
-    }
-    function createChannel(chanConfirmation){
-
-        var channel = JSON.parse(chanConfirmation);
-
-        $("#chanList").append("<li value = '" + channel.id + "'><a href = '#' class = 'channelLink'>" + channel.name + "</a></li>");
-        $("#output").append("<div id = 'c" + channel.id + "Output'></div>");
-
-    }
-
-    function register_user(user){
-
-
-
-    }
-
-    function login(){
-
-        $("#login").css("display", "none");
-        $("#chat").css("display", "block");
-
-    }
-
     function check_mentions(content){
 
         var text = content;
@@ -319,30 +286,110 @@
 
     }
 
-    function updateChannelDisplay() {
+    function submit_channel(chanName){
 
-        var len = $("#output").children().length;
+        var prefix = "C:";
 
-        for (var x = 0; x < len; x++) {
+        var channel = {
+            id: 0,  // Init
+            name: chanName,
+            creator: me,
+            participants: [me], // TODO: Will these convert to lists ok?
+            messages: []
+        };
 
-            if (x == currentChannel) {
-                $("#c" + x + "Output").css("display", "block");
-            }
-            else {
-                $("#c" + x + "Output").css("display", "none");
+        var sObj = prefix + JSON.stringify(channel);
+        socket.send(sObj);
+
+    }
+    function createChannel(chanConfirmation){
+
+        var channel = JSON.parse(chanConfirmation);
+        channels.push(channel);
+
+        $("#output").append("<div id = 'c" + channel.id + "Output'></div>");
+
+    }
+
+    function register_user(username){
+
+        var prefix = "U:";
+
+        var user = {    // init
+            username: username,
+            id: 0
+        };
+
+        var sObj = prefix + JSON.stringify(user);
+        socket.send(sObj);
+
+    }
+
+    function login(newUser){
+
+        me = JSON.parse(newUser);
+
+        $("#login").css("display", "none");
+        $("#chat").css("display", "block");
+
+    }
+
+    function update(){
+
+        updateChannelList();
+        echoMessages();
+        updateChannelDisplay();
+
+    }
+    function updateChannelList(){
+
+        $("#chanList").html("");
+
+        for(var x = 0; x < channels.length; x++){
+
+            var channel = channels[x];
+
+            $("#chanList").append("<li value = '" + channel.id + "'><a href = '#' class = 'channelLink'>" + channel.name + "</a></li>");
+
+        }
+
+    }
+    function echoMessages(){
+
+        for(var c = 0; c < channels.length; c++){
+
+            var channel = channels[c];
+            $("#c" + channel.id + "Output").html("");
+
+            for (var m = 0; m < channel.messages; m++){
+
+                write_message(channel.messages[m], channel);
+
             }
 
         }
 
-        $("#channelHead").html("Channel: " + currentChannel);   // TODO
+    }
+    function updateChannelDisplay() {
+
+        var len = $("#output").children().length;
+
+
+        for (var x = 0; x < len; x++) {
+
+            $("#c" + x + "Output").css("display", "none");
+
+        }
+
+        $("#c" + currentChannel.id + "Output").css("display", "block");
+        $("#channelHead").html(currentChannel.name);
 
     }
 
     $(document).ready(function(){
 
         connect();
-
-        updateChannelDisplay();
+        update();
 
         //Login
         $("#nameButton").click(function(){
@@ -351,16 +398,7 @@
 
             if(name != ""){
 
-                //username = name;
-                me.username = name;
-
-                var user = {    // init
-                    username: name,
-                    id = 0
-                };
-                register_user(user);
-
-                //login();
+                register_user(name);
 
             }
             else{
@@ -384,7 +422,7 @@
             if(message != ""){
 
                 $("#inputText").val("");
-                send_message(message, currentChannel);  // TODO: Sends a channel
+                send_message(message, currentChannel);
 
             }
 
@@ -394,8 +432,8 @@
         // Listener for dynamically added links
         $("body").on("click", ".channelLink", function(){
 
-            currentChannel = $(this).parent().attr("value");
-            updateChannelDisplay();
+            currentChannel = channels[$(this).parent().attr("value")];
+            update();
 
         });
 

@@ -15,43 +15,21 @@ namespace P3_Server
         [JsonProperty]
         private User sender;
         [JsonProperty]
-        private string channel;
-        //private Channel channel;
+        private Channel channel;
+        //[JsonProperty]
         //private DateTime timestamp;
         [JsonProperty]
-        private ulong id;
-        //private int partID; // If the message is too long and needs to be broken up into parts (different messages)
-
-        /*
-        public Message(string content, User sender, Channel channel, DateTime timestamp, ulong id, int partID)
+        private int id;
+        [JsonProperty]
+        private int partID; // If the message is too long and needs to be broken up into parts (different messages)
+        
+        public void setID(int id)
         {
-            this.content = content;
-            this.sender = sender;
-            this.channel = channel;
-            this.timestamp = timestamp;
             this.id = id;
-            this.partID = partID;
         }
-        */
 
         public User getUser() { return sender; }
-
-        public void setID(ulong id)
-        {
-            this.id = id;
-        }
-
-    }
-
-    public static class Messages
-    {
-
-        public static List<Message> list = new List<Message>();
-
-        public static void Add(Message mes)
-        {
-            list.Add(mes);
-        }
+        public Channel getChannel() { return channel; }
 
     }
 
@@ -61,78 +39,41 @@ namespace P3_Server
         [JsonProperty]
         private string username;
         [JsonProperty]
-        private ulong id;
+        private int id;
         //private string password;
 
-        public void setID(ulong id) { this.id = id; }
-
-        public User(string username, ulong id/*, string password*/)
-        {
-            this.username = username;
+        public void setID(int id) {
             this.id = id;
-            //this.password = password;
         }
-    }
+        
+        public int getID() { return id; }
 
-    public class UserChannel
-    {
-        private User user;
-        private Channel channel;
-
-        public UserChannel(User user, Channel channel)
-        {
-            this.user = user;
-            this.channel = channel;
-        }
     }
 
     [JsonObject(MemberSerialization.OptIn)]
     public class Channel
     {
         [JsonProperty]
-        private ulong id;
+        private int id;
         [JsonProperty]
         private string name;
         [JsonProperty]
         private User creator;
+        [JsonProperty]
+        private List<User> participants;
+        [JsonProperty]
+        private List<Message> messages;
 
-        /*
-        public Channel(ulong id, string name, User creator)
-        {
-            this.id = id;
-            this.name = name;
-            this.creator = creator;
-        }
-        */
-
-        public void setID(ulong id)
+        public void setID(int id)
         {
             this.id = id;
         }
-
-    }
-
-    public static class Channels
-    {
-
-        public static List<Channel> list = new List<Channel>();
-
-        public static void Add(Channel chan)
-        {
-            list.Add(chan);
-        }
-
-    }
-
-    public class UserChannelList
-    {
-
-        static List<UserChannel> list = new List<UserChannel>();
-
-        public static void Add(UserChannel uc)
-        {
-            list.Add(uc);
-        }
+        
+        public int getID() { return id; }
+        public string getName() { return name; }
+        public List<User> getParticipants() { return participants; }
+        public User getCreator() { return creator; }
+        public List<Message> getMessages() { return messages; }
 
     }
 
