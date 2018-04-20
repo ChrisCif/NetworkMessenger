@@ -16,8 +16,8 @@ namespace P3_Server
         private User sender;
         [JsonProperty]
         private Channel channel;
-        //[JsonProperty]
-        //private DateTime timestamp;
+        [JsonProperty]
+        private DateTime timestamp;
         [JsonProperty]
         private int id;
         [JsonProperty]

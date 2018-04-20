@@ -14,7 +14,7 @@
         color: cyan;
 
     }
-    .userID
+    .timestamp
     {
 
         font-size: 10px;
@@ -222,16 +222,19 @@
 
         var prefix = "M:";
 
+        var now = new Date();
+
         //s_write(text);
         var message = {
             content: text,
             sender: me,
             channel: channel,
+            timestamp: now.toISOString(),
             id: 0,   // init
             partID: 1   // TODO
         };
 
-        console.log("Sending message: " + JSON.stringify(message));
+        //console.log("Sending message: " + JSON.stringify(message) + " at " + now.toISOString());
 
         socket.send(prefix + JSON.stringify(message));
 
@@ -256,7 +259,7 @@
         m.content = check_mentions(m.content);  // Check for mentions
 
         $("#c" + c.id + "Output").append(""+
-            "<p><span class='sentName'>" + m.sender.username + "<span class = 'userID'> #" + m.sender.id + "</span>: </span>" + m.content + "</p>"
+            "<p><span class='sentName'>" + m.sender.username + "<span class = 'timestamp'> [" + m.timestamp.toString() + "]</span>: </span>" + m.content + "</p>"
         );
 
     }
