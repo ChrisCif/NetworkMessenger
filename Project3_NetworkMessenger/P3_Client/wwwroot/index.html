@@ -172,7 +172,7 @@
 <script type="text/javascript">
 
     var socket;
-    var uri = "ws://127.0.0.1:50000/ws";
+    var uri = "ws://192.168.1.107:50000/ws";
     var output;
     var text = "test echo";
 
@@ -282,10 +282,10 @@
                 end = text.length;
             }
 
-            var name_index = text.substring(begin_index, end).indexOf(username);
+            var name_index = text.substring(begin_index, end).indexOf(me.username);
             if(name_index == 1){
 
-                var m_final = begin_index + username.length + 1;
+                var m_final = begin_index + me.username.length + 1;
                 var before_text = text.substring(0, begin_index);
                 var within_text = text.substring(begin_index, m_final);
                 var after_text = text.substring(m_final);

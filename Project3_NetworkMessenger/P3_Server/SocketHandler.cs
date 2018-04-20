@@ -23,65 +23,51 @@ namespace P3_Server
         {
             this.sockets = new List<WebSocket>();
             this.channels = new List<Channel>();
+
+            // Pub Channel
+            channels.Add(new Channel(0, "Pub"));
+
         }
 
-        async Task ReceiveMessages()
+        async Task ReceiveMessages(WebSocket ws)
         {
 
             var buffer = new byte[BufferSize];
             var seg = new ArraySegment<byte>(buffer);
 
-            while (OpenSockets())
+            while (ws.State == WebSocketState.Open)
             {
-                foreach(WebSocket ws in sockets)
+
+                var inbuffer = new byte[BufferSize];
+                var result = await ws.ReceiveAsync(inbuffer, CancellationToken.None);
+
+                // Close socket when finished
+                if (result.MessageType == WebSocketMessageType.Close)
                 {
-                    if(ws.State == WebSocketState.Open)
-                    {
+                    await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed in server by the client", CancellationToken.None);
+                    return;
+                }
 
-                        var inbuffer = new byte[BufferSize];
-                        var result = await ws.ReceiveAsync(inbuffer, CancellationToken.None);
-
-                        // Close socket when finished
-                        if (result.MessageType == WebSocketMessageType.Close)
-                        {
-                            await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed in server by the client", CancellationToken.None);
-                            return;
-                        }
-
-                        // Check message type
-                        var sObj = System.Text.Encoding.Default.GetString(inbuffer);
-                        if (sObj[0] == 'M')
-                        {
-                            await ParseMessage(sObj);
-                        }
-                        else if (sObj[0] == 'C')
-                        {
-                            await CreateChannel(sObj);
-                        }
-                        else if (sObj[0] == 'U')
-                        {
-                            await AddUser(sObj);
-                        }
-
-                    }
-                }   
-                Thread.Sleep(1000);
-            }
-
-        }
-        bool OpenSockets()
-        {
-            bool open = false;
-
-            foreach(WebSocket ws in sockets)
-            {
-
-                if (ws.State == WebSocketState.Open)
-                    open = true;
+                // Check message type
+                var sObj = System.Text.Encoding.Default.GetString(inbuffer);
+                if (sObj[0] == 'M')
+                {
+                    // Message
+                    await ParseMessage(sObj);
+                }
+                else if (sObj[0] == 'C')
+                {
+                    // New Channel
+                    await CreateChannel(sObj);
+                }
+                else if (sObj[0] == 'U')
+                {
+                    // New User
+                    await AddUser(sObj);
+                }
 
             }
 
-            return open;
         }
 
         async Task ParseMessage(string sMess)
@@ -129,10 +115,16 @@ namespace P3_Server
             // Get and add user
             var user = JsonConvert.DeserializeObject<User>(sUser.Substring(2));
             user.setID(sockets.Count - 1);
-           
+            
             // Echo user
             var outbuffer = System.Text.Encoding.Default.GetBytes("U:" + JsonConvert.SerializeObject(user));
             var outgoing = new ArraySegment<byte>(outbuffer, 0, outbuffer.Length);
+
+            // Add to Pub
+            channels[0].addParticipant(user);
+            var c_outbuffer = System.Text.Encoding.Default.GetBytes("C:" + JsonConvert.SerializeObject(channels[0]));
+            var c_outgoing = new ArraySegment<byte>(c_outbuffer, 0, c_outbuffer.Length);
+            await sockets[user.getID()].SendAsync(c_outgoing, WebSocketMessageType.Text, true, CancellationToken.None);
 
             // Send to correct web socket
             await sockets[user.getID()].SendAsync(outgoing, WebSocketMessageType.Text, true, CancellationToken.None);
@@ -151,8 +143,13 @@ namespace P3_Server
             while (true)
             {
                 var socket = await hc.WebSockets.AcceptWebSocketAsync();
+
+                Console.WriteLine("Accepted web socket");
+
                 sockets.Add(socket);
-                await ReceiveMessages();
+
+                await ReceiveMessages(socket);
+                //Thread.Sleep(1000);
             }
             
         }

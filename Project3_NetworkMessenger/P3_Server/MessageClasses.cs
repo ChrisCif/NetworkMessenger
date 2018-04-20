@@ -64,6 +64,19 @@ namespace P3_Server
         [JsonProperty]
         private List<Message> messages;
 
+        public Channel(int id, string name)
+        {
+            this.id = id;
+            this.name = name;
+            this.creator = new User();
+            this.participants = new List<User>();
+            this.messages = new List<Message>();
+        }
+
+        public void addParticipant(User user)
+        {
+            participants.Add(user);
+        }
         public void setID(int id)
         {
             this.id = id;
