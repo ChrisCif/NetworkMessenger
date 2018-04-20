@@ -20,3 +20,14 @@ D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\NetworkMessenger\Project3_Netw
 D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\NetworkMessenger\Project3_NetworkMessenger\P3_Server\obj\Debug\netcoreapp2.0\P3_Server.AssemblyInfo.cs
 D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\NetworkMessenger\Project3_NetworkMessenger\P3_Server\obj\Debug\netcoreapp2.0\P3_Server.dll
 D:\School\RIT\ThirdYear\Copads\COPADS_Projects\P3\NetworkMessenger\Project3_NetworkMessenger\P3_Server\obj\Debug\netcoreapp2.0\P3_Server.pdb
+C:\Users\Chris\Documents\flashBackup\RIT\ThirdYear\COPADS\COPADS_Projects\P3\NetworkMessenger\NetworkMessenger\Project3_NetworkMessenger\P3_Server\bin\Debug\netcoreapp2.0\P3_Server.deps.json
+C:\Users\Chris\Documents\flashBackup\RIT\ThirdYear\COPADS\COPADS_Projects\P3\NetworkMessenger\NetworkMessenger\Project3_NetworkMessenger\P3_Server\bin\Debug\netcoreapp2.0\P3_Server.runtimeconfig.json
+C:\Users\Chris\Documents\flashBackup\RIT\ThirdYear\COPADS\COPADS_Projects\P3\NetworkMessenger\NetworkMessenger\Project3_NetworkMessenger\P3_Server\bin\Debug\netcoreapp2.0\P3_Server.runtimeconfig.dev.json
+C:\Users\Chris\Documents\flashBackup\RIT\ThirdYear\COPADS\COPADS_Projects\P3\NetworkMessenger\NetworkMessenger\Project3_NetworkMessenger\P3_Server\bin\Debug\netcoreapp2.0\P3_Server.dll
+C:\Users\Chris\Documents\flashBackup\RIT\ThirdYear\COPADS\COPADS_Projects\P3\NetworkMessenger\NetworkMessenger\Project3_NetworkMessenger\P3_Server\bin\Debug\netcoreapp2.0\P3_Server.pdb
+C:\Users\Chris\Documents\flashBackup\RIT\ThirdYear\COPADS\COPADS_Projects\P3\NetworkMessenger\NetworkMessenger\Project3_NetworkMessenger\P3_Server\obj\Debug\netcoreapp2.0\P3_Server.csprojResolveAssemblyReference.cache
+C:\Users\Chris\Documents\flashBackup\RIT\ThirdYear\COPADS\COPADS_Projects\P3\NetworkMessenger\NetworkMessenger\Project3_NetworkMessenger\P3_Server\obj\Debug\netcoreapp2.0\P3_Server.csproj.CoreCompileInputs.cache
+C:\Users\Chris\Documents\flashBackup\RIT\ThirdYear\COPADS\COPADS_Projects\P3\NetworkMessenger\NetworkMessenger\Project3_NetworkMessenger\P3_Server\obj\Debug\netcoreapp2.0\P3_Server.AssemblyInfoInputs.cache
+C:\Users\Chris\Documents\flashBackup\RIT\ThirdYear\COPADS\COPADS_Projects\P3\NetworkMessenger\NetworkMessenger\Project3_NetworkMessenger\P3_Server\obj\Debug\netcoreapp2.0\P3_Server.AssemblyInfo.cs
+C:\Users\Chris\Documents\flashBackup\RIT\ThirdYear\COPADS\COPADS_Projects\P3\NetworkMessenger\NetworkMessenger\Project3_NetworkMessenger\P3_Server\obj\Debug\netcoreapp2.0\P3_Server.dll
+C:\Users\Chris\Documents\flashBackup\RIT\ThirdYear\COPADS\COPADS_Projects\P3\NetworkMessenger\NetworkMessenger\Project3_NetworkMessenger\P3_Server\obj\Debug\netcoreapp2.0\P3_Server.pdb

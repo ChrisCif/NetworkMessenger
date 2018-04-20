@@ -19,6 +19,9 @@ namespace P3_Server
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+
+                .UseUrls("http://0.0.0.0:50000")
+
                 .UseStartup<Startup>()
                 .Build();
     }
