@@ -39,9 +39,16 @@ namespace P3_Server
                     {
 
                         var inbuffer = new byte[BufferSize];
+                        var result = await ws.ReceiveAsync(inbuffer, CancellationToken.None);
 
-                        await ws.ReceiveAsync(inbuffer, CancellationToken.None);
+                        // Close socket when finished
+                        if (result.MessageType == WebSocketMessageType.Close)
+                        {
+                            await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed in server by the client", CancellationToken.None);
+                            return;
+                        }
 
+                        // Check message type
                         var sObj = System.Text.Encoding.Default.GetString(inbuffer);
                         if (sObj[0] == 'M')
                         {

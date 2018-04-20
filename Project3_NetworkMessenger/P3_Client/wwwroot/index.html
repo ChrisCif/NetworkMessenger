@@ -176,6 +176,10 @@
     var output;
     var text = "test echo";
 
+    window.onbeforeunload = function(){
+        socket.close();
+    };
+
     // Init
     var me = {
         username: "",
