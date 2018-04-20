@@ -18,6 +18,7 @@ namespace P3_Server
         //WebSocket socket;
         public List<WebSocket> sockets;
         public List<Channel> channels;
+        public List<User> users;
         
         SocketHandler()
         {

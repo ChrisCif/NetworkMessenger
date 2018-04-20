@@ -46,6 +46,7 @@ namespace P3_Server
             this.id = id;
         }
         
+        public string getName() { return username; }
         public int getID() { return id; }
 
     }
@@ -63,6 +64,8 @@ namespace P3_Server
         private List<User> participants;
         [JsonProperty]
         private List<Message> messages;
+        [JsonProperty]
+        private bool read;
 
         public Channel(int id, string name)
         {
@@ -71,6 +74,7 @@ namespace P3_Server
             this.creator = new User();
             this.participants = new List<User>();
             this.messages = new List<Message>();
+            this.read = false;
         }
 
         public void addParticipant(User user)

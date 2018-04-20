@@ -62,6 +62,29 @@
 
     }
 
+    #input
+    {
+
+        display: none;
+
+    }
+
+    .readChannel
+    {
+
+        // TODO
+        font-weight: normal;
+        color: #2a9fd6;
+
+    }
+    .unreadChannel
+    {
+
+        color: cyan;
+        font-weight: bold;
+
+    }
+
 </style>
 <head>
 
@@ -124,10 +147,7 @@
 
                 <div class = "row">
                     <ul id = "chanList">
-                        <!--
-                        <li value = 0><a href = "#" class = "channelLink">Pub</a></li>
-                        <li value = 1><a href = "#" class = "channelLink">Other</a></li>
-                        -->
+                        <!-- Append channel lists here -->
                     </ul>
                 </div>
 
@@ -138,19 +158,7 @@
 
                 <!-- Output-->
                 <div class = "row" id = "output">
-
-                    <!--
-                    <!-- Pub Channel
-                    <div id = "c0Output">
-                        <!-- Append messages here
-                    </div>
-
-                    <!-- Other Channel
-                    <div id = "c1Output">
-                        <!-- Append messages here
-                    </div>
-                    -->
-
+                    <!-- Append Channels here -->
                 </div>
 
                 <!-- Input -->
@@ -235,7 +243,7 @@
             channel: channel,
             timestamp: now.toISOString(),
             id: 0,   // init
-            partID: 1   // TODO
+            partID: 0   // TODO
         };
 
         //console.log("Sending message: " + JSON.stringify(message) + " at " + now.toISOString());
@@ -249,8 +257,10 @@
         console.log("Received message: " + serM);
 
         var m = JSON.parse(serM);
+        var channel = channels[m.channel.id];
 
-        channels[m.channel.id].messages.push(m);
+        channel.messages.push(m);
+        channel.read = false;
 
         update();
 
@@ -308,8 +318,9 @@
             id: 0,  // Init
             name: chanName,
             creator: me,
-            participants: [me], // TODO: Will these convert to lists ok?
-            messages: []
+            participants: [me],
+            messages: [],
+            read: false
         };
 
         var sObj = prefix + JSON.stringify(channel);
@@ -326,7 +337,11 @@
         var channel = JSON.parse(chanConfirmation);
         channels.push(channel);
 
-        $("#output").append("<div id = 'c" + channel.id + "Output'></div>");
+        $("#output").append(""+
+            "<div id = 'c" + channel.id + "Output'></div>"
+        );
+
+        currentChannel = channel;
 
         update();
 
@@ -357,9 +372,15 @@
 
     function update(){
 
+        unnotify();
         updateChannelList();
         echoMessages();
         updateChannelDisplay();
+
+    }
+    function unnotify(){
+
+        currentChannel.read = true;
 
     }
     function updateChannelList(){
@@ -369,8 +390,18 @@
         for(var x = 0; x < channels.length; x++){
 
             var channel = channels[x];
+            var append_string = "<li value = '" + channel.id + "'><a href = '#' class = 'channelLink ";
 
-            $("#chanList").append("<li value = '" + channel.id + "'><a href = '#' class = 'channelLink'>" + channel.name + "</a></li>");
+            if(channel.read){
+                append_string += "readChannel";
+            }
+            else{
+                append_string += "unreadChannel";
+            }
+
+            append_string += "'>" + channel.name + "</a></li>";
+
+            $("#chanList").append(append_string);
 
         }
 
@@ -407,7 +438,13 @@
         $("#c" + currentChannel.id + "Output").css("display", "block");
         $("#channelHead").html(currentChannel.name);
 
+        $("#input").css("display", "block");
+
+        currentChannel.read = true;
+
     }
+
+
 
     $(document).ready(function(){
 
