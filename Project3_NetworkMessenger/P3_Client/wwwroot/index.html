@@ -272,6 +272,8 @@
         $("#login").css("display", "none");
         $("#chat").css("display", "block");
 
+        update();
+
     }
 
     function update(){
@@ -357,7 +359,6 @@
     $(document).ready(function(){
 
         connect();
-        update();
 
         //Login
         $("#nameButton").click(function(){
