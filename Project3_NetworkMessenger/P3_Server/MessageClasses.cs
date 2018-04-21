@@ -58,8 +58,10 @@ namespace P3_Server
         private string name;
         [JsonProperty]
         private User creator;
+        /*
         [JsonProperty]
         private List<User> participants;
+        */
         [JsonProperty]
         private List<Message> messages;
         [JsonProperty]
@@ -70,15 +72,17 @@ namespace P3_Server
             this.id = id;
             this.name = name;
             this.creator = new User();
-            this.participants = new List<User>();
+            //this.participants = new List<User>();
             this.messages = new List<Message>();
             this.read = false;
         }
 
+        /*
         public void addParticipant(User user)
         {
             participants.Add(user);
         }
+        */
         public void setID(int id)
         {
             this.id = id;
@@ -86,7 +90,7 @@ namespace P3_Server
         
         public int getID() { return id; }
         public string getName() { return name; }
-        public List<User> getParticipants() { return participants; }
+        //public List<User> getParticipants() { return participants; }
         public User getCreator() { return creator; }
         public List<Message> getMessages() { return messages; }
 

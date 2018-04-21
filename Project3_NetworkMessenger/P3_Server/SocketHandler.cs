@@ -84,10 +84,10 @@ namespace P3_Server
             var outbuffer = System.Text.Encoding.Default.GetBytes("M:" + JsonConvert.SerializeObject(message));
             var outgoing = new ArraySegment<byte>(outbuffer, 0, outbuffer.Length);
 
-            // Send to every user in the channel
-            foreach(User u in destinationChannel.getParticipants())
+            // Send to every user
+            foreach(WebSocket ws in sockets)
             {
-                await sockets[u.getID()].SendAsync(outgoing, WebSocketMessageType.Text, true, CancellationToken.None);
+                await ws.SendAsync(outgoing, WebSocketMessageType.Text, true, CancellationToken.None);
             }
             
         }
@@ -123,12 +123,17 @@ namespace P3_Server
             var outbuffer = System.Text.Encoding.Default.GetBytes("U:" + JsonConvert.SerializeObject(user));
             var outgoing = new ArraySegment<byte>(outbuffer, 0, outbuffer.Length);
 
-            // Add to Pub
-            channels[0].addParticipant(user);
-            var c_outbuffer = System.Text.Encoding.Default.GetBytes("C:" + JsonConvert.SerializeObject(channels[0]));
-            var c_outgoing = new ArraySegment<byte>(c_outbuffer, 0, c_outbuffer.Length);
-            await sockets[user.getID()].SendAsync(c_outgoing, WebSocketMessageType.Text, true, CancellationToken.None);
+            // Add to channels
+            foreach (Channel c in channels)
+            {
 
+                //c.addParticipant(user);
+                var c_outbuffer = System.Text.Encoding.Default.GetBytes("C:" + JsonConvert.SerializeObject(c));
+                var c_outgoing = new ArraySegment<byte>(c_outbuffer, 0, c_outbuffer.Length);
+                await sockets[user.getID()].SendAsync(c_outgoing, WebSocketMessageType.Text, true, CancellationToken.None);
+
+            }
+            
             // Send to correct web socket
             await sockets[user.getID()].SendAsync(outgoing, WebSocketMessageType.Text, true, CancellationToken.None);
 
