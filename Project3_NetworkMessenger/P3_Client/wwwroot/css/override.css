@@ -88,8 +88,7 @@ p
 .readChannel
 {
 
-// TODO
-font-weight: normal;
+    font-weight: normal;
     color: #2a9fd6;
 
 }
@@ -99,5 +98,17 @@ font-weight: normal;
     color: cyan;
     background-color: whitesmoke;
     font-weight: bold;
+
+}
+.activeChannel
+{
+
+    color: white;
+
+}
+.activeChannel:hover
+{
+
+    font-style: normal;
 
 }

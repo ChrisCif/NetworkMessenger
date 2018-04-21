@@ -303,6 +303,10 @@
                 append_string += "unreadChannel";
             }
 
+            if(x == currentChannel){
+                append_string += " activeChannel"
+            }
+
             append_string += "'>" + channel.name + "</a></li>";
 
             $("#chanList").append(append_string);
