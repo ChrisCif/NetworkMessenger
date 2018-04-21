@@ -18,7 +18,6 @@ namespace P3_Server
         //WebSocket socket;
         public List<WebSocket> sockets;
         public List<Channel> channels;
-        public List<User> users;
         
         SocketHandler()
         {
@@ -76,9 +75,9 @@ namespace P3_Server
             
             // Get and add message
             var message = JsonConvert.DeserializeObject<Message>(sMess.Substring(2));
-            message.setID(Int32.Parse(message.getChannel().getID() + "" + message.getChannel().getMessages().Count));
+            message.setID(Int32.Parse(message.getChannelID() + "" + channels[message.getChannelID()].getMessages().Count));
             
-            var destinationChannel = channels[message.getChannel().getID()];
+            var destinationChannel = channels[message.getChannelID()];
             destinationChannel.getMessages().Add(message);
 
             // Echo message
@@ -105,8 +104,11 @@ namespace P3_Server
             var outbuffer = System.Text.Encoding.Default.GetBytes("C:" + JsonConvert.SerializeObject(channel));
             var outgoing = new ArraySegment<byte>(outbuffer, 0, outbuffer.Length);
 
-            // Send to creator
-            await sockets[channel.getCreator().getID()].SendAsync(outgoing, WebSocketMessageType.Text, true, CancellationToken.None);
+            // Send to users
+            foreach(WebSocket ws in sockets)
+            {
+                await ws.SendAsync(outgoing, WebSocketMessageType.Text, true, CancellationToken.None);
+            }
 
         }
 
@@ -144,13 +146,12 @@ namespace P3_Server
             while (true)
             {
                 var socket = await hc.WebSockets.AcceptWebSocketAsync();
-
-                Console.WriteLine("Accepted web socket");
-
+                
                 sockets.Add(socket);
 
                 await ReceiveMessages(socket);
-                //Thread.Sleep(1000);
+                await socket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
+
             }
             
         }

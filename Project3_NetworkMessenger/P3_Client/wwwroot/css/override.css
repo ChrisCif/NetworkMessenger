@@ -1,0 +1,103 @@
+p
+{
+
+    color: white;
+
+}
+
+.sentName
+{
+
+    color: darkcyan;
+
+}
+.receivedName
+{
+
+    color: cyan;
+
+}
+.timestamp
+{
+
+    font-size: 10px;
+    color: yellow;
+
+}
+.mention
+{
+
+    background-color: #2a2a2a;
+    color: whitesmoke;
+
+}
+
+.col
+{
+
+//border: white dashed 1px;
+
+}
+
+#login
+{
+
+    display: block;
+
+}
+#chat
+{
+
+    display: none;
+
+}
+
+#output
+{
+
+    border: 1px solid whitesmoke;
+    min-height: 600px;
+    max-width: 100%;
+
+}
+
+#input
+{
+
+    display: none;
+    bottom: 0;
+    //width: 100%;
+
+}
+#input *
+{
+
+    margin-left: 3%;
+    margin-top: 3%;
+    margin-bottom: 3%;
+
+}
+
+#inputText
+{
+
+    width: 50%;
+
+}
+
+.readChannel
+{
+
+// TODO
+font-weight: normal;
+    color: #2a9fd6;
+
+}
+.unreadChannel
+{
+
+    color: cyan;
+    background-color: whitesmoke;
+    font-weight: bold;
+
+}

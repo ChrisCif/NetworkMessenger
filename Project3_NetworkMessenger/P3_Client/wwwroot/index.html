@@ -1,91 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<style>
-
-    .sentName
-    {
-
-        color: orange;
-
-    }
-    .receivedName
-    {
-
-        color: cyan;
-
-    }
-    .timestamp
-    {
-
-        font-size: 10px;
-        color: yellow;
-
-    }
-    .mention
-    {
-
-        background-color: #2a2a2a;
-        color: whitesmoke;
-
-    }
-
-    .col
-    {
-
-        border: white dashed 1px;
-
-    }
-
-    #login
-    {
-
-        display: block;
-
-    }
-    #chat
-    {
-
-        display: none;
-
-    }
-
-    #pubOutput
-    {
-
-        display: block;
-
-    }
-    #otherOutput
-    {
-
-        display: none;
-
-    }
-
-    #input
-    {
-
-        display: none;
-
-    }
-
-    .readChannel
-    {
-
-        // TODO
-        font-weight: normal;
-        color: #2a9fd6;
-
-    }
-    .unreadChannel
-    {
-
-        color: cyan;
-        font-weight: bold;
-
-    }
-
-</style>
 <head>
 
     <meta charset="UTF-8">
@@ -93,6 +7,7 @@
 
     <script src="js/jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/override.css">
 
 </head>
 <body>
@@ -100,19 +15,19 @@
     <!-- Login View -->
     <div id = "login">
 
-        <div class = "col-lg-6 col-lg-offset-3">
+        <div class = "col col-lg-6 offset-lg-3">
 
             <div class = "row" id = "loginMessages">
                 <!-- Append login messages here -->
             </div>
 
             <div class = "row" id = "loginForm">
-                <div class = "card text-white bg-secondary mb-3">
+                <div class = "col col-lg-4 offset-lg-4 card text-white bg-secondary mb-3">
                     <div class = "card-body">
 
-                        <h4>Login</h4>
+                        <legend>Login</legend>
                         <input id = "nameInput" type = "text">
-                        <button id = "nameButton">Login</button>
+                        <button type = "button" class = "btn btn-primary" id = "nameButton">Login</button>
 
                     </div>
                 </div>
@@ -123,14 +38,10 @@
     </div>
 
     <!-- Chat View -->
-    <div id = "chat">
+    <div class = "col-lg-8 offset-lg-2" id = "chat">
 
         <!-- Header -->
-        <div class = "row">
-
-            <h3 id = "channelHead"><!-- Append header here --></h3>
-
-        </div>
+        <h1 class = "display-3" id = "channelHead"><!-- Append header here --></h1>
 
         <!-- Full Display -->
         <div class = "row">
@@ -138,15 +49,15 @@
             <!-- Channel List -->
             <div class = "col-lg-3">
 
-                <div class = "row">
+                <div class = "card-header">
 
                     <input id = "newChannelInput" type = "text">
-                    <button id = "newChannelSubmit">Create</button>
+                    <button type = "button" class = "btn btn-primary" id = "newChannelSubmit">Create</button>
 
                 </div>
 
                 <div class = "row">
-                    <ul id = "chanList">
+                    <ul class = "list-group" id = "chanList">
                         <!-- Append channel lists here -->
                     </ul>
                 </div>
@@ -162,10 +73,10 @@
                 </div>
 
                 <!-- Input -->
-                <div class = "row" id = "input">
+                <div class = "row col-lg-12 card border-secondary mb-3" id = "input">
 
                     <input id = "inputText" type = "text">
-                    <button id = "sendButton">Send</button>
+                    <button type = "button" class = "btn btn-primary" id = "sendButton">Send</button>
 
                 </div>
 
@@ -181,8 +92,6 @@
 
     var socket;
     var uri = "ws://192.168.1.107:50000/ws";
-    var output;
-    var text = "test echo";
 
     window.onbeforeunload = function(){
         socket.close();
@@ -197,19 +106,13 @@
     var currentChannel = 0;
     var channels = [];
 
-    function r_write(s){
-
-        $("#pubOutput").append("<p><span class='receivedName'>Server: </span>" + s + "</p>");
-
-    }
-
     function connect(){
 
         socket = new WebSocket(uri);
-        socket.onopen = function(e) { r_write("opened " + uri); };
-        socket.onclose = function(e) { r_write("closed"); };
+        //socket.onopen = function(e) { r_write("opened " + uri); };
+        //socket.onclose = function(e) { r_write("closed"); };
         socket.onmessage = function(e) { interpret(e.data); };
-        socket.onerror = function(e) { r_write("Error: " + e.data); };
+        //socket.onerror = function(e) { r_write("Error: " + e.data); };
 
     }
 
@@ -230,7 +133,7 @@
 
     }
 
-    function send_message(text, channel){
+    function send_message(text, channelID){
 
         var prefix = "M:";
 
@@ -240,10 +143,9 @@
         var message = {
             content: text,
             sender: me,
-            channel: channel,
+            channelID: channelID,
             timestamp: now.toISOString(),
-            id: 0,   // init
-            partID: 0   // TODO
+            id: 0   // init
         };
 
         //console.log("Sending message: " + JSON.stringify(message) + " at " + now.toISOString());
@@ -257,7 +159,7 @@
         console.log("Received message: " + serM);
 
         var m = JSON.parse(serM);
-        var channel = channels[m.channel.id];
+        var channel = channels[m.channelID];
 
         channel.messages.push(m);
         channel.read = false;
@@ -272,8 +174,10 @@
 
         m.content = check_mentions(m.content);  // Check for mentions
 
+        var timestamp = new Date(m.timestamp);
+
         $("#c" + c.id + "Output").append(""+
-            "<p><span class='sentName'>" + m.sender.username + "<span class = 'timestamp'> [" + m.timestamp.toString() + "]</span>: </span>" + m.content + "</p>"
+            "<p><span class='sentName'>" + m.sender.username + "<span class = 'timestamp'> [" + timestamp.toString().substring(0, timestamp.toString().length - 33) + "]</span>: </span>" + m.content + "</p>"
         );
 
     }
@@ -341,7 +245,7 @@
             "<div id = 'c" + channel.id + "Output'></div>"
         );
 
-        currentChannel = channel;
+        currentChannel = channel.id;
 
         update();
 
@@ -380,7 +284,7 @@
     }
     function unnotify(){
 
-        currentChannel.read = true;
+        channels[currentChannel].read = true;
 
     }
     function updateChannelList(){
@@ -390,7 +294,7 @@
         for(var x = 0; x < channels.length; x++){
 
             var channel = channels[x];
-            var append_string = "<li value = '" + channel.id + "'><a href = '#' class = 'channelLink ";
+            var append_string = "<li class = 'list-group-item' value = '" + channel.id + "'><a href = '#' class = 'channelLink ";
 
             if(channel.read){
                 append_string += "readChannel";
@@ -435,12 +339,12 @@
 
         }
 
-        $("#c" + currentChannel.id + "Output").css("display", "block");
-        $("#channelHead").html(currentChannel.name);
+        $("#c" + channels[currentChannel].id + "Output").css("display", "block");
+        $("#channelHead").html(channels[currentChannel].name);
 
         $("#input").css("display", "block");
 
-        currentChannel.read = true;
+        channels[currentChannel].read = true;
 
     }
 
@@ -449,7 +353,7 @@
     $(document).ready(function(){
 
         connect();
-        update();
+        //update();
 
         //Login
         $("#nameButton").click(function(){
@@ -474,6 +378,17 @@
             $("#nameInput").val("");
 
         });
+        document.getElementById("nameInput").addEventListener("keyup", function(event){
+
+            // You can just press enter
+
+            event.preventDefault();
+
+            if(event.keyCode == 13){
+                document.getElementById("nameButton").click();
+            }
+
+        });
 
         // Send Messages
         $("#sendButton").click(function(){
@@ -487,12 +402,23 @@
             }
 
         });
+        document.getElementById("inputText").addEventListener("keyup", function(event){
+
+            // You can just press enter
+
+           event.preventDefault();
+
+           if(event.keyCode == 13){
+               document.getElementById("sendButton").click();
+           }
+
+        });
 
         // Switch Channels
         // Listener for dynamically added links
         $("body").on("click", ".channelLink", function(){
 
-            currentChannel = channels[$(this).parent().attr("value")];
+            currentChannel = $(this).parent().attr("value");
             update();
 
         });
@@ -506,6 +432,17 @@
 
                 submit_channel(cName);
 
+            }
+
+        });
+        document.getElementById("newChannelInput").addEventListener("keyup", function(event){
+
+            // You can just press enter
+
+            event.preventDefault();
+
+            if(event.keyCode == 13){
+                document.getElementById("newChannelSubmit").click();
             }
 
         });

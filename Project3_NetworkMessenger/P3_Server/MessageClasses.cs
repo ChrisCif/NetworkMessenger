@@ -15,13 +15,11 @@ namespace P3_Server
         [JsonProperty]
         private User sender;
         [JsonProperty]
-        private Channel channel;
+        private int channelID;
         [JsonProperty]
         private DateTime timestamp;
         [JsonProperty]
         private int id;
-        [JsonProperty]
-        private int partID; // If the message is too long and needs to be broken up into parts (different messages)
         
         public void setID(int id)
         {
@@ -29,7 +27,7 @@ namespace P3_Server
         }
 
         public User getUser() { return sender; }
-        public Channel getChannel() { return channel; }
+        public int getChannelID() { return channelID; }
 
     }
 
